@@ -61,7 +61,8 @@
                      (src-block . org-gfm-src-block)
                      (table-cell . org-gfm-table-cell)
                      (table-row . org-gfm-table-row)
-                     (table . org-gfm-table)))
+                     (table . org-gfm-table)
+                     (timestamp . org-gfm-timestamp)))
 
 
 ;;; Transcode Functions
@@ -221,6 +222,20 @@ contextual information."
                       gfm-table-right-border "\n")))))
     (concat (and no-header (funcall build-dummy-header))
             (replace-regexp-in-string "\n\n" "\n" contents))))
+
+;;;; Timestamp
+
+(defun org-gfm-timestamp (timestamp _contents info)
+  "Transcode a TIMESTAMP object from Org to HTML.
+CONTENTS is nil.  INFO is a plist holding contextual
+information."
+  (let ((value (org-html-plain-text (org-timestamp-translate timestamp) info)))
+    (format "%s"
+            (replace-regexp-in-string
+             "&lt;" "("
+             (replace-regexp-in-string
+              "&gt;" ")"
+               value)))))
 
 ;;;; Table of contents
 
